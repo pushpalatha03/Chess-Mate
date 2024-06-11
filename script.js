@@ -1,14 +1,10 @@
 var board,
     game = new Chess();
 
-/*The "AI" part starts here */
-
 var minimaxRoot =function(depth, game, isMaximisingPlayer) {
-
     var newGameMoves = game.ugly_moves();
     var bestMove = -9999;
     var bestMoveFound;
-
     for(var i = 0; i < newGameMoves.length; i++) {
         var newGameMove = newGameMoves[i]
         game.ugly_move(newGameMove);
@@ -27,9 +23,7 @@ var minimax = function (depth, game, alpha, beta, isMaximisingPlayer) {
     if (depth === 0) {
         return -evaluateBoard(game.board());
     }
-
     var newGameMoves = game.ugly_moves();
-
     if (isMaximisingPlayer) {
         var bestMove = -9999;
         for (var i = 0; i < newGameMoves.length; i++) {
@@ -107,7 +101,6 @@ var bishopEvalWhite = [
     [ -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0],
     [ -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
 ];
-
 var bishopEvalBlack = reverseArray(bishopEvalWhite);
 
 var rookEvalWhite = [
@@ -120,7 +113,6 @@ var rookEvalWhite = [
     [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
     [  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0]
 ];
-
 var rookEvalBlack = reverseArray(rookEvalWhite);
 
 var evalQueen = [
@@ -133,7 +125,6 @@ var evalQueen = [
     [ -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0],
     [ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
 ];
-
 var kingEvalWhite = [
 
     [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
@@ -147,9 +138,6 @@ var kingEvalWhite = [
 ];
 
 var kingEvalBlack = reverseArray(kingEvalWhite);
-
-
-
 
 var getPieceValue = function (piece, x, y) {
     if (piece === null) {
@@ -202,16 +190,13 @@ var getBestMove = function (game) {
     if (game.game_over()) {
         alert('Game over');
     }
-
     positionCount = 0;
     var depth = parseInt($('#search-depth').find(':selected').text());
-
     var d = new Date().getTime();
     var bestMove = minimaxRoot(depth, game, true);
     var d2 = new Date().getTime();
     var moveTime = (d2 - d);
     var positionsPerS = ( positionCount * 1000 / moveTime);
-
     $('#position-count').text(positionCount);
     $('#time').text(moveTime/1000 + 's');
     $('#positions-per-s').text(positionsPerS);
@@ -227,20 +212,16 @@ var renderMoveHistory = function (moves) {
     historyElement.scrollTop(historyElement[0].scrollHeight);
 
 };
-
 var onDrop = function (source, target) {
-
     var move = game.move({
         from: source,
         to: target,
         promotion: 'q'
     });
-
     removeGreySquares();
     if (move === null) {
         return 'snapback';
     }
-
     renderMoveHistory(game.history());
     window.setTimeout(makeBestMove, 250);
 };
@@ -254,11 +235,8 @@ var onMouseoverSquare = function(square, piece) {
         square: square,
         verbose: true
     });
-
     if (moves.length === 0) return;
-
     greySquare(square);
-
     for (var i = 0; i < moves.length; i++) {
         greySquare(moves[i].to);
     }
@@ -274,12 +252,10 @@ var removeGreySquares = function() {
 
 var greySquare = function(square) {
     var squareEl = $('#board .square-' + square);
-
     var background = '#a9a9a9';
     if (squareEl.hasClass('black-3c85d') === true) {
         background = '#696969';
     }
-
     squareEl.css('background', background);
 };
 
@@ -292,65 +268,97 @@ var cfg = {
     onMouseoverSquare: onMouseoverSquare,
     onSnapEnd: onSnapEnd
 };
-board = ChessBoard('board', cfg);
-function gameLoop() {
-    var delay = 500; // Delay between moves in milliseconds
-    var winner = null;
-
-    while (!game.game_over()) {
-        var bestMove = getBestMove(game); // Get the best move for the current player
-        game.move(bestMove);
-        board.position(game.fen()); // Update board position
-        renderMoveHistory(game.history()); // Update move history
-        
-        if (game.game_over()) {
-            if (game.in_checkmate()) {
-                winner = game.turn() === 'w' ? 'Black' : 'White';
-                alert('Checkmate! ' + winner + ' wins!');
-            } else if (game.in_draw()) {
-                alert('Draw!');
-            }
-        }
-
-        // Add delay before making the next move
-        setTimeout(() => {}, delay);
+var makeWhiteMove = function() {
+    var bestMove = getBestWhiteMove(game);
+    game.ugly_move(bestMove);
+    board.position(game.fen());
+    renderMoveHistory(game.history());
+    if (game.game_over()) {
+        alert('Game over');
     }
 };
-gameLoop();
 
-/*// Define variables to keep track of current player and game state
-var currentPlayer = 'w'; // Start with white player
-var gameInProgress = true;
+var getBestWhiteMove = function(game) {
+    if (game.game_over()) {
+        alert('Game over');
+    }
 
-// Modify game loop to make moves automatically until game over
-function playGame() {
-    if (gameInProgress) {
-        if (currentPlayer === 'w') {
-            // White player's turn
-            var whiteMove = getBestMove(game); // Get best move for white player
-            game.move(whiteMove);
-            board.position(game.fen()); // Update board position
-            renderMoveHistory(game.history()); // Update move history
-            currentPlayer = 'b'; // Switch to black player's turn
-        } else {
-            // Black player's turn
-            var blackMove = getBestMove(game); // Get best move for black player
-            game.move(blackMove);
-            board.position(game.fen()); // Update board position
-            renderMoveHistory(game.history()); // Update move history
-            currentPlayer = 'w'; // Switch to white player's turn
-        }
+    positionCount = 0;
+    var depth = parseInt($('#search-depth').find(':selected').text());
+    var d = new Date().getTime();
+    var bestMove = minimaxRootWhite(depth, game, true);
+    var d2 = new Date().getTime();
+    var moveTime = (d2 - d);
+    var positionsPerS = (positionCount * 1000 / moveTime);
 
-        // Check if game is over
-        if (game.game_over()) {
-            gameInProgress = false;
-            alert('Game Over');
-        } else {
-            // Continue playing
-            setTimeout(playGame, 500); // Delay between moves for better visibility
+    $('#position-count').text(positionCount);
+    $('#time').text(moveTime / 1000 + 's');
+    $('#positions-per-s').text(positionsPerS);
+    return bestMove;
+};
+
+var minimaxRootWhite = function(depth, game, isMaximisingPlayer) {
+    var newGameMoves = game.ugly_moves();
+    var bestMove = -9999;
+    var bestMoveFound;
+
+    for (var i = 0; i < newGameMoves.length; i++) {
+        var newGameMove = newGameMoves[i];
+        game.ugly_move(newGameMove);
+        var value = minimaxWhite(depth - 1, game, -10000, 10000, !isMaximisingPlayer);
+        game.undo();
+        if (value >= bestMove) {
+            bestMove = value;
+            bestMoveFound = newGameMove;
         }
     }
-}
+    return bestMoveFound;
+};
 
-// Start the game loop
-playGame();*/
+var minimaxWhite = function(depth, game, alpha, beta, isMaximisingPlayer) {
+    positionCount++;
+    if (depth === 0) {
+        return evaluateBoard(game.board());
+    }
+
+    var newGameMoves = game.ugly_moves();
+
+    if (isMaximisingPlayer) {
+        var bestMove = -9999;
+        for (var i = 0; i < newGameMoves.length; i++) {
+            game.ugly_move(newGameMoves[i]);
+            bestMove = Math.max(bestMove, minimaxWhite(depth - 1, game, alpha, beta, !isMaximisingPlayer));
+            game.undo();
+            alpha = Math.max(alpha, bestMove);
+            if (beta <= alpha) {
+                return bestMove;
+            }
+        }
+        return bestMove;
+    } else {
+        var bestMove = 9999;
+        for (var i = 0; i < newGameMoves.length; i++) {
+            game.ugly_move(newGameMoves[i]);
+            bestMove = Math.min(bestMove, minimaxWhite(depth - 1, game, alpha, beta, !isMaximisingPlayer));
+            game.undo();
+            beta = Math.min(beta, bestMove);
+            if (beta <= alpha) {
+                return bestMove;
+            }
+        }
+        return bestMove;
+    }
+};
+
+$('#ai-button').on('click', function() {
+    if (game.turn() === 'w') {
+        makeWhiteMove();
+        if (game.game_over()) {
+            alert('Game over');
+        } else {
+            window.setTimeout(makeBestMove, 250);
+        }
+    }
+});
+
+board = ChessBoard('board', cfg);
