@@ -1,51 +1,60 @@
-.container {
+body {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center horizontally */
-    justify-content: center; /* Center vertically */
-    height: 100vh; /* Take full viewport height */
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
 }
-
-.board-container {
+.container {
     display: flex;
-    justify-content: center; /* Center the board horizontally */
-    align-items: center; /* Center the board vertically */
-    margin-bottom: 20px; /* Add some space at the bottom */
-    position: relative; /* Set container as a relative position for absolute positioning of info */
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+    left: 50px;
 }
-
 .board {
     width: 400px;
-    height: 400px; /* Set fixed width and height */
 }
-
-.info {
-    text-align: left; /* Left align the info */
-    position: absolute; /* Position info absolute to board container */
-    bottom: 0; /* Align info to the bottom */
-    left: 50%; /* Align info horizontally to the center */
-    transform: translateX(-50%); /* Adjust horizontal positioning to center */
-    margin-bottom: 50px; /* Decrease the gap between board and info */
-}
-.info-heading {
-    font-weight: bold;
-    margin-bottom: 5px; /* Adjust spacing between heading and content */
-}
-
-
 .move-history {
-    width: 150px; /* Set fixed width */
-    height: 400px; /* Set fixed height */
+    width: 150px;
+    margin-left: 20px;
+    border: 2px solid #000;
+    padding: 10px;
+    height: 300px; 
     overflow-y: scroll;
-    border: 2px solid #0f0f0f;
-    border-radius: 5px;
-    margin-left: 20px; /* Add space between board and move history */
-    position: absolute; /* Position move history absolute to board container */
-    right: -250px; /* Move move history to the right */
-    top: 0; /* Align move history to the top */
-    padding-left:20px;
+    box-sizing: border-box;
 }
-
-
-
-
+.move-history h3 {
+    font-weight: bold; 
+    margin-top:  0; 
+}
+.info {
+    width: 400px;
+    text-align: justify;
+    margin: 20px auto;
+    font-size: 18px;
+    font-weight: 500;
+}
+.info div {
+    margin-bottom: 10px;
+}
+.ai-button {
+    margin-top: 20px; 
+    padding: 10px 20px;
+    background-color: rgb(189, 97, 97);
+    color: black;
+    border: 2px solid #000; 
+    border-radius: 5px; 
+    font-size:bold;
+    font-size:medium;
+    cursor: pointer;
+    z-index: 1000;
+    bottom: -10px;
+    left: 80%; 
+    transform: translateX(-80%);
+}
+.ai-button:hover {
+    background-color: #8a2a2a57;
+}
