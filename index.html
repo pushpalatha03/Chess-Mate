@@ -7,12 +7,15 @@
 </head>
 <body>
 <div class="container">
-    <div class="board-container">
-        <div id="board" class="board"></div>
-        <div id="move-history" class="move-history"></div>
+    <div id="board" class="board"></div>
+    <div id="move-history" class="move-history">
+        <h3>Move History</h3>
     </div>
-    <div class="info">
-        <div class="info-heading">Statistics</div>
+</div>
+
+<button id="ai-button" class="ai-button">AI</button>
+<div class="info">
+    <div>
         Search depth:
         <select id="search-depth">
             <option value="1">1</option>
@@ -21,13 +24,20 @@
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
-        <br>
+    </div>
+    <br>
+    <div>
         <span>Positions evaluated: <span id="position-count"></span></span>
-        <br>
+    </div>
+    <br>
+    <div>
         <span>Time: <span id="time"></span></span>
-        <br>
+    </div>
+    <br>
+    <div>
         <span>Positions/s: <span id="positions-per-s"></span> </span>
     </div>
+    <br>
 </div>
 <script src="lib/jquery/jquery-3.2.1.min.js"></script>
 <script src="lib/chessboardjs/js/chess.js"></script>
